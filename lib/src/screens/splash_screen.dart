@@ -56,16 +56,22 @@ class _SplashScreenState extends State<SplashScreen> {
       final data = jsonData['data'] ?? {};
 
       final logo = data['mobile_logo'] as String? ?? '';
-      final nameComapny = data['display_company_name'] as String? ?? '';
+      // final nameComapny = data['display_company_name'] as String? ?? Constant.companyName;
       final bgColorHex = data['background_theme_color'] as String? ?? '#FFFFFF';
       final textColorHex = data['text_color'] as String? ?? '#000000';
-      final homeBanner = data['mobile_banner'] as String? ?? '';
+      final homeBanner = data['mobile_banner'];
 
-      // Set global constants
+      if (homeBanner != null && homeBanner is List) {
+        // Clear and update banner images with 1 asset + network images
+        Constant.bannerImages = [
+          // Constant.companyHomeBanner,
+          ...List<String>.from(homeBanner.whereType<String>()),
+        ];
+      }
+      // Constant.bannerImages = homeBanner;
       Constant.companyLogo = logo;
       Constant.backgroundThemeColor = bgColorHex;
       Constant.textColour = textColorHex;
-      Constant.companyName = nameComapny;
       // Constant.companyHomeBanner = homeBanner;
 
       setState(() {

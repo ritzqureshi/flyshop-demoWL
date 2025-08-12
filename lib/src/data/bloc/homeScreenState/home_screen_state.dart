@@ -1,9 +1,11 @@
+import 'package:ikotech/src/data/model/HomeModel/coupon_offer_model.dart';
 import 'package:ikotech/src/data/model/HomeModel/faq_model.dart';
 import 'package:ikotech/src/data/model/HomeModel/offer_deal_model.dart';
 import 'package:ikotech/src/data/model/HomeModel/popular_destination_model.dart';
 import 'package:ikotech/src/data/model/HomeModel/testimonial_model.dart';
 import 'package:ikotech/src/data/model/HomeModel/travel_blog_model.dart';
 
+import '../../model/HomeModel/airline_offer_model.dart';
 import '../../model/HomeModel/header_box_m.dart';
 import 'package:equatable/equatable.dart';
 
@@ -14,51 +16,12 @@ abstract class HomeState extends Equatable {
   const HomeState();
 }
 
-// class HomeInitial extends HomeState {
-//   @override
-//   List<Object> get props => [];
-// }
-
-// class HomeLoading extends HomeState {
-//   @override
-//   List<Object> get props => [];
-// }
-
-// class HomeLoaded extends HomeState {
-//   final HeaderBoxModel? headerBox;
-//   final List<OfferModel>? offerDeals;
-//   final List<PopularDestinationModel>? popularDestination;
-//   final List<TopFlightRouteModel>? topFlightRoute;
-//   final List<TestimonialModel>? testimonial;
-//   final List<FAQModel>? frequentlyAskQ;
-//   final List<TravelBlogModel>? travelBlog;
-//   final List<WhyWithUsModel>? whyWithUs;
-
-//   const HomeLoaded({
-//     this.headerBox,
-//     this.offerDeals,
-//     this.popularDestination,
-//     this.topFlightRoute,
-//     this.testimonial,
-//     this.frequentlyAskQ,
-//     this.travelBlog,
-//     this.whyWithUs
-//   });
-//   @override
-//   List<Object> get props => [headerBox!];
-// }
-
-// class HomeError extends HomeState {
-//   final String message;
-//   const HomeError(this.message);
-//   @override
-//   List<Object> get props => [message];
-// }
-
 class HomeSectionState extends HomeState {
   final HeaderBoxModel? headerBox;
   final List<OfferModel>? offerDeals;
   final List<PopularDestinationModel>? popularDestination;
+  final List<AirlineOfferModel>? airlineOffer;
+  final List<CouponOfferModel>? couponOffer;
   final List<TopFlightRouteModel>? topFlightRoute;
   final List<TestimonialModel>? testimonial;
   final List<FAQModel>? frequentlyAskQ;
@@ -70,6 +33,8 @@ class HomeSectionState extends HomeState {
     this.headerBox,
     this.offerDeals,
     this.popularDestination,
+    this.airlineOffer,
+    this.couponOffer,
     this.topFlightRoute,
     this.testimonial,
     this.frequentlyAskQ,
@@ -82,6 +47,8 @@ class HomeSectionState extends HomeState {
     HeaderBoxModel? headerBox,
     List<OfferModel>? offerDeals,
     List<PopularDestinationModel>? popularDestination,
+    List<AirlineOfferModel>? airlineOffer,
+    List<CouponOfferModel>? couponOffer,
     List<TopFlightRouteModel>? topFlightRoute,
     List<TestimonialModel>? testimonial,
     List<FAQModel>? frequentlyAskQ,
@@ -93,6 +60,8 @@ class HomeSectionState extends HomeState {
       headerBox: headerBox ?? this.headerBox,
       offerDeals: offerDeals ?? this.offerDeals,
       popularDestination: popularDestination ?? this.popularDestination,
+      airlineOffer: airlineOffer ?? this.airlineOffer,
+      couponOffer: couponOffer ?? this.couponOffer,
       topFlightRoute: topFlightRoute ?? this.topFlightRoute,
       testimonial: testimonial ?? this.testimonial,
       frequentlyAskQ: frequentlyAskQ ?? this.frequentlyAskQ,
@@ -104,14 +73,16 @@ class HomeSectionState extends HomeState {
 
   @override
   List<Object?> get props => [
-        headerBox,
-        offerDeals,
-        popularDestination,
-        topFlightRoute,
-        testimonial,
-        frequentlyAskQ,
-        travelBlog,
-        whyWithUs,
-        error,
-      ];
+    headerBox,
+    offerDeals,
+    popularDestination,
+    airlineOffer,
+    couponOffer,
+    topFlightRoute,
+    testimonial,
+    frequentlyAskQ,
+    travelBlog,
+    whyWithUs,
+    error,
+  ];
 }

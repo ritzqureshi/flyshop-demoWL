@@ -31,9 +31,9 @@ class _FrequentlyAskQuestionState extends State<FrequentlyAskQuestion> {
         .where((offer) => offer.category == selectingQuest)
         .toList();
     return Container(
-      decoration: BoxDecoration(color: MyColors.white),
+      decoration: BoxDecoration(color: MyColors.white,borderRadius: BorderRadius.circular(12),border: Border.all(color: Colors.black)),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(18.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

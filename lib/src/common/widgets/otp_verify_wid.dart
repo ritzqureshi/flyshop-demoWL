@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ikotech/main.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/bloc/loginState/login_state.dart';
@@ -38,6 +39,7 @@ class _OtpVerifyWidState extends State<OtpVerifyWid> {
   Widget build(BuildContext context) {
     final loginState = Provider.of<LoginState>(context);
     final mediaQuery = MediaQuery.of(context);
+    getLog(widget.request, "request");
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -81,6 +83,11 @@ class _OtpVerifyWidState extends State<OtpVerifyWid> {
                           node.unfocus();
                         }
                         FunctionsUtils.loadingDialog(context);
+                        await Future.delayed(Duration(seconds: 1));
+                        navigatorKey.currentState?.pop();
+                        navigatorKey.currentState?.pop();
+                        await loginState.loginSendOtp(context, widget.request);
+
                         // trigger resend logic here
                       },
                       child: const Text(

@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:ikotech/src/common/widgets/my_textfield.dart';
 import 'package:ikotech/src/data/bloc/loginState/login_state.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +22,7 @@ class LoginBottomSheetState extends State<LoginBottomSheet> {
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
-  String? numberCountryCode = '';
+  String? numberCountryCode = '91';
   String? countryCodeISO = '';
 
   @override
@@ -74,7 +73,7 @@ class LoginBottomSheetState extends State<LoginBottomSheet> {
                   await loginState.loginSendOtp(context, {
                     "email": userName,
                     "mobile": mobileNo,
-                    "country_code": numberCountryCode,
+                    "country_code": numberCountryCode?.replaceAll("+", " "),
                   });
                   // if (result['status']) {
                   //   setState(() => isLoading = false);
@@ -148,33 +147,22 @@ class LoginBottomSheetState extends State<LoginBottomSheet> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // User Name field
-                // MyTextField(
-                //   decorationContainer: BoxDecoration(
-                //     color: Colors.white,
-                //     borderRadius: BorderRadius.circular(13),
-                //   ),
-                //   validator: _validateEmail,
-                //   textEditingController: _usernameController,
-                //   labelTextTextField: "User Name",
-                //   maxLines: 1,
-                //   maxLength: null,
-                //   prefixIcon: const Icon(Icons.mail_outline), // for consistency
-                // ),
                 const SizedBox(height: 5),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Country Code Picker
                     Container(
-                      width: 120,
+                      width: 130,
+                      height: 60,
                       decoration: BoxDecoration(
                         border: Border.all(color: MyColors.grey, width: 2),
-                        color: Colors.white,
                         borderRadius: BorderRadius.circular(13),
+                        color: Colors.white,
                       ),
                       margin: EdgeInsets.only(top: 13),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8),
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Center(
                         child: InternationalPhoneNumberInput(
                           initialValue: number,
                           textStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -192,7 +180,6 @@ class LoginBottomSheetState extends State<LoginBottomSheet> {
                           ),
                           formatInput: false,
                           autoValidateMode: AutovalidateMode.disabled,
-                          // textFieldController: TextEditingController(),
                           keyboardType: TextInputType.none,
                           ignoreBlank: true,
                           inputBorder: InputBorder.none,
@@ -200,19 +187,35 @@ class LoginBottomSheetState extends State<LoginBottomSheet> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    // Mobile number
+                    // Mobile Number Field
                     Expanded(
-                      child: MyTextField(
-                        decorationContainer: BoxDecoration(
-                          color: Colors.white,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 13),
+                        height: 60,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: MyColors.grey, width: 2),
                           borderRadius: BorderRadius.circular(13),
+                          color: Colors.white,
                         ),
-                        validator: _validatePassword,
-                        textEditingController: mobileController,
-                        labelTextTextField: "Mobile Number",
-                        maxLines: 1,
-                        maxLength: null,
-                        prefixIcon: const Icon(Icons.phone_android),
+                        child: Center(
+                          child: TextFormField(
+                            controller: mobileController,
+                            validator: _validatePassword,
+                            maxLines: 1,
+                            keyboardType: TextInputType.phone,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 14,
+                              ),
+                              border: InputBorder.none,
+                              prefixIcon: Icon(Icons.phone_android),
+                              hintText: "Mobile Number",
+                              hintStyle: TextStyle(fontWeight: FontWeight.w400),
+                              counterText: '',
+                            ),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
                     ),
                   ],

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ikotech/src/data/model/HomeModel/popular_destination_model.dart';
 
@@ -95,6 +97,7 @@ class DestinationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // getLog(jsonEncode(destination.toJson()), "destinations");
     return Container(
       width: 250,
       decoration: BoxDecoration(

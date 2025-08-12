@@ -1,3 +1,5 @@
+import 'package:ikotech/src/data/model/HomeModel/airline_offer_model.dart';
+import 'package:ikotech/src/data/model/HomeModel/coupon_offer_model.dart';
 import 'package:ikotech/src/data/model/HomeModel/faq_model.dart';
 import 'package:ikotech/src/data/model/HomeModel/header_box_m.dart';
 import 'package:ikotech/src/data/model/HomeModel/offer_deal_model.dart';
@@ -62,7 +64,44 @@ class HomeScreenApi {
       }
       return null;
     } catch (e) {
-      getLog(e.toString(), "Error offerAndDeals");
+      getLog(e.toString(), "Error popularDestinationApi");
+      return null;
+    }
+  }
+
+  static Future<List<AirlineOfferModel>?> airlineOfferApiMethod() async {
+    try {
+      final dioCommon = DioCommon();
+      dioCommon.setUrl = Constant.airlineOfferApiStr;
+      dioCommon.setMethod = "GET";
+      final response = await dioCommon.response;
+      if (response.statusCode == 200) {
+        final offerAndDeals = (response.data['airline_offers'] as List)
+            .map((item) => AirlineOfferModel.fromJson(item))
+            .toList();
+        return offerAndDeals;
+      }
+      return null;
+    } catch (e) {
+      getLog(e.toString(), "Error airlineOfferApiMethod");
+      return null;
+    }
+  }
+  static Future<List<CouponOfferModel>?> couponOfferListMethod() async {
+    try {
+      final dioCommon = DioCommon();
+      dioCommon.setUrl = Constant.couponOfferApiStr;
+      dioCommon.setMethod = "GET";
+      final response = await dioCommon.response;
+      if (response.statusCode == 200) {
+        final offerAndDeals = (response.data['coupon_offers'] as List)
+            .map((item) => CouponOfferModel.fromJson(item))
+            .toList();
+        return offerAndDeals;
+      }
+      return null;
+    } catch (e) {
+      getLog(e.toString(), "Error couponOfferListMethod");
       return null;
     }
   }
@@ -81,7 +120,7 @@ class HomeScreenApi {
       }
       return null;
     } catch (e) {
-      getLog(e.toString(), "Error offerAndDeals");
+      getLog(e.toString(), "Error topFlightRouteMethod");
       return null;
     }
   }
@@ -100,7 +139,7 @@ class HomeScreenApi {
       }
       return null;
     } catch (e) {
-      getLog(e.toString(), "Error offerAndDeals");
+      getLog(e.toString(), "Error testimonialMethod");
       return null;
     }
   }
@@ -119,7 +158,7 @@ class HomeScreenApi {
       }
       return null;
     } catch (e) {
-      getLog(e.toString(), "Error offerAndDeals");
+      getLog(e.toString(), "Error faqMethod");
       return null;
     }
   }
@@ -138,7 +177,7 @@ class HomeScreenApi {
       }
       return null;
     } catch (e) {
-      getLog(e.toString(), "Error offerAndDeals");
+      getLog(e.toString(), "Error travelBlogMethod");
       return null;
     }
   }
@@ -156,7 +195,7 @@ class HomeScreenApi {
       }
       return null;
     } catch (e) {
-      getLog(e.toString(), "Error offerAndDeals");
+      getLog(e.toString(), "Error travelBlogDetailsMethod");
       return null;
     }
   }
@@ -174,7 +213,7 @@ class HomeScreenApi {
       }
       return null;
     } catch (e) {
-      getLog(e.toString(), "Error offerAndDeals");
+      getLog(e.toString(), "Error whyWithUsMethodApi");
       return null;
     }
   }

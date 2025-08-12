@@ -3,41 +3,6 @@ import 'package:ikotech/src/data/api/home_screen_api.dart';
 
 import 'home_screen_state.dart';
 
-// class HomeCubit extends Cubit<HomeState> {
-//   HomeCubit() : super(HomeInitial());
-
-//   Future<void> fetchHomeData() async {
-//     emit(HomeLoading());
-//     try {
-//       final headerBoxes = await HomeScreenApi.headerBoxMethodApi();
-//       final offerSections = await HomeScreenApi.offerAndDeals();
-//       final popularDestinationSections =
-//           await HomeScreenApi.popularDestinationApi();
-//       final topFlightRouteSections = await HomeScreenApi.topFlightRouteMethod();
-//       final tesmonialSections = await HomeScreenApi.testimonialMethod();
-//       final faqSections = await HomeScreenApi.faqMethod();
-//       final travelBlogSections = await HomeScreenApi.travelBlogMethod();
-//       final whyWithUsSections = await HomeScreenApi.whyWithUsMethodApi();
-//       emit(
-//         HomeLoaded(
-//           headerBox: headerBoxes,
-//           offerDeals: offerSections,
-//           popularDestination: popularDestinationSections,
-//           topFlightRoute: topFlightRouteSections,
-//           testimonial: tesmonialSections,
-//           frequentlyAskQ: faqSections,
-//           travelBlog: travelBlogSections,
-//           whyWithUs: whyWithUsSections,
-//         ),
-//       );
-//     } catch (e) {
-//       getLog(e.toString(), "HomeCubit");
-//       emit(HomeError("Failed to load home data"));
-//     }
-//   }
-// }
-
-
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(const HomeSectionState());
 
@@ -45,6 +10,8 @@ class HomeCubit extends Cubit<HomeState> {
     fetchHeaderBox();
     fetchOffers();
     fetchDestinations();
+    fetchAirlineOffer();
+    fetchCouponOfferList();
     fetchFlightRoutes();
     fetchTestimonials();
     fetchFAQ();
@@ -70,6 +37,20 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final result = await HomeScreenApi.popularDestinationApi();
       emit((state as HomeSectionState).copyWith(popularDestination: result));
+    } catch (_) {}
+  }
+
+  void fetchAirlineOffer() async {
+    try {
+      final result = await HomeScreenApi.airlineOfferApiMethod();
+      emit((state as HomeSectionState).copyWith(airlineOffer: result));
+    } catch (_) {}
+  }
+
+  void fetchCouponOfferList() async {
+    try {
+      final result = await HomeScreenApi.couponOfferListMethod();
+      emit((state as HomeSectionState).copyWith(couponOffer: result));
     } catch (_) {}
   }
 

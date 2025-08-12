@@ -53,10 +53,11 @@ class LoginState with ChangeNotifier {
   }
 
   Future<void> loginSendOtp(BuildContext context, dynamic request) async {
+    getLog(request, "request");
     try {
       FunctionsUtils.loadingDialog(navigatorKey.currentState!.context);
       final response = await LoginAuthApi.loginAndSendOTPApi(request);
-      getLog(response.runtimeType, "response12s");
+      getLog(response, "response12s");
       getLog(request, "response12s");
       _message = response['message'];
       if (response['status']) {

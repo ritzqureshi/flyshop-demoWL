@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../common/session_services.dart';
 import '../common/utils/functions.dart';
+import '../common/widgets/airline_offer_wid.dart';
 import '../common/widgets/common_shimmer_loader_wid.dart';
+import '../common/widgets/coupon_offer_wid.dart';
 import '../common/widgets/custom_drawer.dart';
 import '../common/widgets/exciting_deals_wid.dart';
 import '../common/widgets/header_box_home_wid.dart';
@@ -82,6 +85,29 @@ class _HomeScreenB2bState extends State<HomeScreenB2b>
     controller!.forward(from: 0.0);
   }
 
+  bool _isPopupShown = false; // prevent repeat dialogs
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final state = context.read<HomeCubit>().state;
+    if (state is HomeSectionState && !_isPopupShown) {
+      final popupOffers =
+          state.offerDeals
+              ?.where((e) => e.category == "Popup" && e.image!.isNotEmpty)
+              .toList() ??
+          [];
+
+      if (popupOffers.isNotEmpty) {
+        _isPopupShown = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _showPopupDialog(popupOffers.first); // show only one popup
+        });
+      }
+    }
+  }
+
   void _rotateIcon() {
     if (!controller!.isAnimating) {
       controller!.reset();
@@ -101,331 +127,275 @@ class _HomeScreenB2bState extends State<HomeScreenB2b>
         child: RefreshIndicator(
           onRefresh: () => _onRefresh(),
           child: Scrollbar(
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                if (state is! HomeSectionState) {
-                  return const Center(child: CircularProgressIndicator());
+            child: BlocListener<HomeCubit, HomeState>(
+              listenWhen: (previous, current) =>
+                  current is HomeSectionState && !_isPopupShown,
+              listener: (context, state) {
+                if (state is HomeSectionState) {
+                  final popupOffers =
+                      state.offerDeals
+                          ?.where(
+                            (e) =>
+                                e.category == "Popup" &&
+                                (e.image?.isNotEmpty ?? false),
+                          )
+                          .toList() ??
+                      [];
+
+                  if (popupOffers.isNotEmpty) {
+                    _isPopupShown = true;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _showPopupDialog(popupOffers.first);
+                    });
+                  }
                 }
+              },
+              child: BlocBuilder<HomeCubit, HomeState>(
+                builder: (context, state) {
+                  if (state is! HomeSectionState) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                final headerBoxData = state.headerBox;
-                final offerAndDeals = state.offerDeals;
-                final popularDestination = state.popularDestination;
-                final topFlightRoute = state.topFlightRoute;
-                final testmonial = state.testimonial;
-                final frequentlyAksQuestion = state.frequentlyAskQ;
-                final travelBlog = state.travelBlog;
-                final whywithUs = state.whyWithUs;
+                  final headerBoxData = state.headerBox;
+                  final allOffers = state.offerDeals ?? [];
+                  final nonPopupOffers = allOffers
+                      .where((e) => e.category != "Popup")
+                      .toList();
 
-                final enabledItems =
-                    headerBoxData
-                        ?.toJson()['data']
-                        .entries
-                        .where((e) => e.value == "1" && e.key != 'b2c_theme')
-                        .map((e) => e.key)
-                        .toList() ??
-                    [];
+                  final popularDestination = state.popularDestination;
+                  final airlineOffer = state.airlineOffer;
+                  final couponOfferList = state.couponOffer;
+                  final topFlightRoute = state.topFlightRoute;
+                  final testmonial = state.testimonial;
+                  final frequentlyAksQuestion = state.frequentlyAskQ;
+                  final travelBlog = state.travelBlog;
+                  final whywithUs = state.whyWithUs;
 
-                return Stack(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 4,
-                      width: MediaQuery.of(context).size.width,
-                      child: Image.asset(
-                        Constant.companyHomeBanner,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: Row(
-                            children: [
-                              Container(
+                  final enabledItems =
+                      headerBoxData
+                          ?.toJson()['data']
+                          .entries
+                          .where((e) => e.value == "1" && e.key != 'b2c_theme')
+                          .map((e) => e.key)
+                          .toList() ??
+                      [];
+
+                  return Stack(
+                    children: [
+                      CarouselSlider(
+                        options: CarouselOptions(
+                          height: MediaQuery.of(context).size.height / 2.7,
+                          viewportFraction: 1.0,
+                          autoPlay: true,
+                          autoPlayInterval: const Duration(seconds: 4),
+                          enableInfiniteScroll: true,
+                          enlargeCenterPage: false,
+                        ),
+                        items: Constant.bannerImages.map((imagePath) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return SizedBox(
                                 width: MediaQuery.of(context).size.width,
-                                margin: const EdgeInsets.only(top: 47),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7),
-                                        color: MyColors.white.withOpacity(.4),
-                                      ),
-                                      margin: const EdgeInsets.only(left: 10),
-                                      child: Builder(
-                                        builder: (context) => GestureDetector(
-                                          onTap: () =>
-                                              Scaffold.of(context).openDrawer(),
-                                          child: const Icon(
-                                            CupertinoIcons.bars,
-                                            color: MyColors.white,
-                                            size: 35,
+                                child: imagePath.startsWith('http')
+                                    ? FunctionsUtils.buildCachedImage(
+                                        imagePath,
+                                        fit: BoxFit.fitHeight,
+                                        width: double.infinity,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                            3.5,
+                                      )
+                                    : Image.asset(imagePath, fit: BoxFit.fill),
+                              );
+                            },
+                          );
+                        }).toList(),
+                      ),
+                      Column(
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(
+                                            context,
+                                          ).size.width,
+                                          margin: const EdgeInsets.only(
+                                            top: 47,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(7),
+                                                  color: MyColors.white
+                                                      .withOpacity(.4),
+                                                ),
+                                                margin: const EdgeInsets.only(
+                                                  left: 10,
+                                                ),
+                                                child: Builder(
+                                                  builder: (context) =>
+                                                      GestureDetector(
+                                                        onTap: () =>
+                                                            Scaffold.of(
+                                                              context,
+                                                            ).openDrawer(),
+                                                        child: const Icon(
+                                                          CupertinoIcons.bars,
+                                                          color: MyColors.black,
+                                                          size: 35,
+                                                        ),
+                                                      ),
+                                                ),
+                                              ),
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                  right: 20,
+                                                ),
+                                                child:
+                                                    FunctionsUtils.buildCachedImage(
+                                                      Constant.companyLogo,
+                                                      width: 100,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 20),
-                                      child: FunctionsUtils.buildCachedImage(
-                                        Constant.companyLogo,
-                                        width: 100,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  headerBoxData == null
+                                      ? const CommonSectionShimmer()
+                                      : HeaderBoxHomeWid(
+                                          enabledItems: enabledItems,
+                                        ),
+                                  const SizedBox(height: 20),
+                                  airlineOffer == null
+                                      ? const CommonSectionShimmer()
+                                      : AirlineOfferWid(
+                                          destination: airlineOffer,
+                                        ),
+                                  const SizedBox(height: 20),
+                                  couponOfferList == null
+                                      ? const CommonSectionShimmer()
+                                      : CouponOfferWid(
+                                          destination: couponOfferList,
+                                        ),
+                                  const SizedBox(height: 20),
+                                  nonPopupOffers.isEmpty
+                                      ? const CommonSectionShimmer()
+                                      : OffersDealsWidget(
+                                          offers: nonPopupOffers,
+                                        ),
+                                  const SizedBox(height: 20),
+                                  whywithUs == null
+                                      ? const CommonSectionShimmer()
+                                      : WhyWithUsWid(offers: whywithUs),
+                                  const SizedBox(height: 20),
+                                  popularDestination == null
+                                      ? const CommonSectionShimmer()
+                                      : PopularDestinationWid(
+                                          destination: popularDestination,
+                                        ),
+                                  const SizedBox(height: 20),
+                                  topFlightRoute == null
+                                      ? const CommonSectionShimmer()
+                                      : TopFlightRouteWid(
+                                          destination: topFlightRoute,
+                                        ),
+                                  const SizedBox(height: 20),
+                                  travelBlog == null
+                                      ? const CommonSectionShimmer()
+                                      : BlogsWid(destination: travelBlog),
+                                  const SizedBox(height: 20),
+                                  testmonial == null
+                                      ? const CommonSectionShimmer()
+                                      : TestimonialWid(testimonial: testmonial),
+                                  const SizedBox(height: 20),
+                                  frequentlyAksQuestion == null
+                                      ? const CommonSectionShimmer()
+                                      : Container(
+                                          padding: EdgeInsets.all(20),
+                                          child: FrequentlyAskQuestion(
+                                            dataa: frequentlyAksQuestion,
+                                          ),
+                                        ),
+                                  const SizedBox(height: 20),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 20),
-                                // Header Box Section
-                                headerBoxData == null
-                                    ? const CommonSectionShimmer()
-                                    : HeaderBoxHomeWid(
-                                        enabledItems: enabledItems,
-                                      ),
-                                const SizedBox(height: 20),
-                                // Offers Section
-                                offerAndDeals == null
-                                    ? const CommonSectionShimmer()
-                                    : OffersDealsWidget(offers: offerAndDeals),
-                                const SizedBox(height: 20),
-                                // Why With Us Section
-                                whywithUs == null
-                                    ? const CommonSectionShimmer()
-                                    : WhyWithUsWid(offers: whywithUs),
-                                const SizedBox(height: 20),
-                                // Popular Destination Section
-                                popularDestination == null
-                                    ? const CommonSectionShimmer()
-                                    : PopularDestinationWid(
-                                        destination: popularDestination,
-                                      ),
-                                const SizedBox(height: 20),
-                                // Top Flight Routes
-                                topFlightRoute == null
-                                    ? const CommonSectionShimmer()
-                                    : TopFlightRouteWid(
-                                        destination: topFlightRoute,
-                                      ),
-                                const SizedBox(height: 20),
-                                // Blog Section
-                                travelBlog == null
-                                    ? const CommonSectionShimmer()
-                                    : BlogsWid(destination: travelBlog),
-                                const SizedBox(height: 20),
-                                // Testimonials
-                                testmonial == null
-                                    ? const CommonSectionShimmer()
-                                    : TestimonialWid(destination: testmonial),
-                                const SizedBox(height: 20),
-                                // FAQs
-                                frequentlyAksQuestion == null
-                                    ? const CommonSectionShimmer()
-                                    : FrequentlyAskQuestion(
-                                        dataa: frequentlyAksQuestion,
-                                      ),
-                                const SizedBox(height: 20),
-                              ],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),
       ),
     );
-    // Scaffold(
-    //   drawer: CustomSideDrawer(userModel: userModel),
-    //   backgroundColor: const Color.fromARGB(255, 237, 235, 235),
-    //   body: SafeArea(
-    //     top: false,
-    //     child: RefreshIndicator(
-    //       onRefresh: () => _onRefresh(),
-    //       child: Scrollbar(
-    //         child: BlocBuilder<HomeCubit, HomeState>(
-    //           builder: (context, state) {
-    //             if (state is HomeLoading) {
-    //               return const Center(child: CircularProgressIndicator());
-    //             }
-    //             if (state is HomeError) {
-    //               return Center(child: Text(state.message));
-    //             }
-    //             if (state is HomeLoaded) {
-    //               final headerBoxData = state.headerBox;
-    //               final offerAndDeals = state.offerDeals;
-    //               final popularDestination = state.popularDestination;
-    //               final topFlightRoute = state.topFlightRoute;
-    //               final testmonial = state.testimonial;
-    //               final frequentlyAksQuestion = state.frequentlyAskQ;
-    //               final travelBlog = state.travelBlog;
-    //               final whywithUs = state.whyWithUs;
-    //               // final enabledItems = headerBoxData
-    //               //     ?.toJson()['data']
-    //               //     .entries
-    //               //     .where((e) => e.value == "1")
-    //               //     .map((e) => e.key)
-    //               //     .toList();
+  }
 
-    //               final enabledItems = headerBoxData
-    //                   ?.toJson()['data']
-    //                   .entries
-    //                   .where((e) => e.value == "1" && e.key != 'b2c_theme')
-    //                   .map((e) => e.key)
-    //                   .toList();
-
-    //               return Stack(
-    //                 children: [
-    //                   // Container(
-    //                   //   height: MediaQuery.of(context).size.height / 2.2,
-    //                   //   decoration:
-    //                   //       const BoxDecoration(gradient: MyColors.mainGradientColour),
-    //                   // ),
-    //                   SizedBox(
-    //                     height: MediaQuery.of(context).size.height / 4,
-    //                     width: MediaQuery.of(context).size.width,
-    //                     child: Image.asset(
-    //                       'assets/images/homeScreen.png',
-    //                       fit: BoxFit.fill,
-    //                     ),
-    //                   ),
-    //                   Column(
-    //                     children: [
-    //                       Padding(
-    //                         padding: const EdgeInsets.only(top: 20.0),
-    //                         child: Row(
-    //                           children: [
-    //                             Container(
-    //                               width: MediaQuery.of(context).size.width,
-    //                               margin: EdgeInsets.only(top: 47),
-    //                               child: Row(
-    //                                 mainAxisAlignment:
-    //                                     MainAxisAlignment.spaceBetween,
-    //                                 // crossAxisAlignment: CrossAxisAlignment.center,
-    //                                 children: [
-    //                                   Container(
-    //                                     decoration: BoxDecoration(
-    //                                       borderRadius: BorderRadius.circular(
-    //                                         7,
-    //                                       ),
-    //                                       color: MyColors.white.withOpacity(.4),
-    //                                     ),
-    //                                     margin: const EdgeInsets.only(left: 10),
-    //                                     child: Builder(
-    //                                       builder: (BuildContext context) {
-    //                                         return GestureDetector(
-    //                                           onTap: () {
-    //                                             Scaffold.of(
-    //                                               context,
-    //                                             ).openDrawer();
-    //                                           },
-    //                                           child: const Icon(
-    //                                             CupertinoIcons.bars,
-    //                                             color: MyColors.white,
-    //                                             size: 35,
-    //                                           ),
-    //                                         );
-    //                                       },
-    //                                     ),
-    //                                   ),
-
-    //                                   Container(
-    //                                     margin: EdgeInsets.only(right: 20),
-    //                                     child: FunctionsUtils.buildCachedImage(
-    //                                       Constant.companyLogo,
-    //                                       width: 100,
-    //                                       fit: BoxFit.cover,
-    //                                       // width: double.infinity,
-    //                                       // height: double.infinity,
-    //                                     ),
-    //                                   ),
-    //                                 ],
-    //                               ),
-    //                             ),
-    //                           ],
-    //                         ),
-    //                       ),
-
-    //                       Expanded(
-    //                         child: SingleChildScrollView(
-    //                           child: Column(
-    //                             crossAxisAlignment: CrossAxisAlignment.start,
-    //                             children: [
-    //                               // Padding(
-    //                               //   padding: const EdgeInsets.only(top: 12.0),
-    //                               //   child: Row(
-    //                               //     children: [
-    //                               //       Padding(
-    //                               //         padding: const EdgeInsets.only(
-    //                               //           left: 11.0,
-    //                               //           top: 0,
-    //                               //         ),
-    //                               //         child: Text(
-    //                               //           "Hey ${firstName.toLowerCase()},",
-    //                               //           style: TextStyle(
-    //                               //             color: MyColors.yellowVeryDark,
-    //                               //             fontSize: 17,
-    //                               //           ),
-    //                               //         ),
-    //                               //       ),
-    //                               //       // const Spacer(),
-    //                               //     ],
-    //                               //   ),
-    //                               // ),
-    //                               SizedBox(height: 20),
-    //                               //----------Header boxes item--------//
-    //                               HeaderBoxHomeWid(enabledItems: enabledItems),
-    //                               SizedBox(height: 20),
-    //                               OffersDealsWidget(
-    //                                 offers: offerAndDeals ?? [],
-    //                               ),
-    //                               SizedBox(height: 20),
-    //                               WhyWithUsWid(offers: whywithUs ?? []),
-    //                               SizedBox(height: 20),
-    //                               PopularDestinationWid(
-    //                                 destination: popularDestination ?? [],
-    //                               ),
-    //                               SizedBox(height: 20),
-    //                               TopFlightRouteWid(
-    //                                 destination: topFlightRoute ?? [],
-    //                               ),
-    //                               SizedBox(height: 20),
-    //                               BlogsWid(destination: travelBlog ?? []),
-    //                               SizedBox(height: 20),
-    //                               TestimonialWid(destination: testmonial ?? []),
-    //                               SizedBox(height: 20),
-    //                               FrequentlyAskQuestion(
-    //                                 dataa: frequentlyAksQuestion ?? [],
-    //                               ),
-    //                             ],
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ],
-    //               );
-    //             }
-    //             return Center(child: const Text("Something went wrong!"));
-    //           },
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
+  void _showPopupDialog(dynamic popupOffer) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FunctionsUtils.buildCachedImage(
+                popupOffer.image,
+                fit: BoxFit.cover,
+                width: MediaQuery.of(context).size.width * 0.9,
+              ),
+              if ((popupOffer.name ?? '').isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    popupOffer.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              if ((popupOffer.description ?? '').isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    popupOffer.description,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Close"),
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   //---------fetch data from server  b2c content-----

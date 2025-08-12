@@ -5,9 +5,9 @@ import '../../screens/see_all_screen.dart';
 import '../utils/colours.dart';
 
 class TestimonialWid extends StatefulWidget {
-  final List<TestimonialModel> destination;
+  final List<TestimonialModel> testimonial;
 
-  const TestimonialWid({super.key, required this.destination});
+  const TestimonialWid({super.key, required this.testimonial});
 
   @override
   State<TestimonialWid> createState() => _TestimonialWidState();
@@ -42,7 +42,7 @@ class _TestimonialWidState extends State<TestimonialWid> {
                     MaterialPageRoute(
                       builder: (_) => SeeAllScreen(
                         title: "Our Reviews",
-                        items: widget.destination,
+                        items: widget.testimonial,
                         itemBuilder: (offer) =>
                             (offer.contents != '' && offer.name != '')
                             ? TestimonialCard(model: offer)
@@ -75,14 +75,14 @@ class _TestimonialWidState extends State<TestimonialWid> {
         ),
         const SizedBox(height: 12),
         CarouselSlider.builder(
-          itemCount: widget.destination.length,
+          itemCount: widget.testimonial.length,
           itemBuilder: (context, index, realIdx) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child:
-                  (widget.destination[index].contents != '' &&
-                      widget.destination[index].name != '')
-                  ? TestimonialCard(model: widget.destination[index])
+                  (widget.testimonial[index].contents != '' &&
+                      widget.testimonial[index].name != '')
+                  ? TestimonialCard(model: widget.testimonial[index])
                   : SizedBox.shrink(),
             );
           },
@@ -99,9 +99,9 @@ class _TestimonialWidState extends State<TestimonialWid> {
         const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(widget.destination.length, (index) {
-            return (widget.destination[index].contents != '' &&
-                    widget.destination[index].name != '')
+          children: List.generate(widget.testimonial.length, (index) {
+            return (widget.testimonial[index].contents != '' &&
+                    widget.testimonial[index].name != '')
                 ? AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -136,6 +136,7 @@ class TestimonialCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: MyColors.black),
         boxShadow: const [
           BoxShadow(
             color: Colors.black12,

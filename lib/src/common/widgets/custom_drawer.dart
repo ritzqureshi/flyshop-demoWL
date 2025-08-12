@@ -67,10 +67,10 @@ class _CustomSideDrawerState extends State<CustomSideDrawer> {
                       ),
                       Spacer(),
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.close,
                           size: 38,
-                          color: Colors.white,
+                          color: FunctionsUtils.hexToColor(Constant.textColour),
                         ),
                         onPressed: () => Navigator.of(context).pop(),
                       ),
@@ -100,22 +100,7 @@ class _CustomSideDrawerState extends State<CustomSideDrawer> {
                         },
                       ),
                     ),
-
-              // _isLoading
-              //     ? Center(child: CircularProgressIndicator())
-              //     : _drawerItems == null || _drawerItems!.isEmpty
-              //     ? Expanded(
-              //         child: Center(child: Text("No menu items available.")),
-              //       )
-              //     : Expanded(
-              //         child: ListView.builder(
-              //           itemCount: _drawerItems!.length,
-              //           itemBuilder: (context, index) {
-              //             final item = _drawerItems![index];
-              //             return _buildMenuItem(item);
-              //           },
-              //         ),
-              //       ),
+             
               const Divider(),
 
               // Footer
@@ -123,7 +108,7 @@ class _CustomSideDrawerState extends State<CustomSideDrawer> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
-                     Text(
+                    Text(
                       "© 2024 ${Constant.companyName}\nAll Rights Reserved.",
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.grey, fontSize: 12),
@@ -172,7 +157,7 @@ class _CustomSideDrawerState extends State<CustomSideDrawer> {
           onTap: () {
             context.push(
               "/drawerItemPage",
-              extra: item as CustomDrawerItemModel,
+              extra: item,
             );
             getLog(item.toJson(), "item");
           },

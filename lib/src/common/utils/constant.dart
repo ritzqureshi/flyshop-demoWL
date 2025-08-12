@@ -9,6 +9,7 @@ abstract class Constant {
   static var companyName = 'Demo WL';
   static var companyLogo = 'assets/images/applogo.png';
   static var companyHomeBanner = 'assets/images/homeScreen.png';
+  static List<String> bannerImages = [Constant.companyHomeBanner];
   static var backgroundThemeColor = '';
   static var textColour = '';
   static const splashSettingApi = '${apiBaseUrl}website-setting?wlid=$wlID';
@@ -17,6 +18,8 @@ abstract class Constant {
   static const offerAndDealsAPi = '${apiBaseUrl}offer?wlid=$wlID';
   static const popularDestinationApi =
       '${apiBaseUrl}popular-destination?wlid=$wlID';
+  static const airlineOfferApiStr = '${apiBaseUrl}airline-offer?wlid=$wlID';
+  static const couponOfferApiStr = '${apiBaseUrl}coupon-offer-list?wlid=$wlID';
   static const topFlightRouteApi = '${apiBaseUrl}top-flight-route?wlid=$wlID';
   static const testimonialApi = '${apiBaseUrl}testimonial?wlid=$wlID';
   static const faqApi = '${apiBaseUrl}faqs-list?wlid=$wlID';

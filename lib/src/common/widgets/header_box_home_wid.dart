@@ -28,7 +28,7 @@ class HeaderBoxHomeWid extends StatelessWidget {
       extraItems = remainingItems.skip(3).toList();
     }
     return Padding(
-      padding: const EdgeInsets.only(top: 30.0),
+      padding: const EdgeInsets.only(top: 10.0),
       child: Column(
         children: [
           // Top Grid (Always 4 max)

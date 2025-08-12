@@ -1,5 +1,7 @@
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../data/model/HomeModel/travel_blog_model.dart';
 import '../../screens/see_all_screen.dart';
@@ -51,7 +53,7 @@ class _BlogsWidState extends State<BlogsWid> {
                   );
                 },
                 child: Row(
-                  children:  [
+                  children: [
                     Container(
                       margin: EdgeInsets.all(6),
                       child: Text(
@@ -133,56 +135,67 @@ class BlogsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 220,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: ClipRRect(
+    return GestureDetector(
+      onTap: () {
+        context.push("/blogDetailsWid", extra: travelBlog);
+      },
+      child: Column(
+        children: [
+          SizedBox(          
+            height: 220,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Container(
+                 decoration: BoxDecoration(
+              border: Border.all(color: MyColors.black),
               borderRadius: BorderRadius.circular(28),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  FunctionsUtils.buildCachedImage(
-                    travelBlog.featureImage!,
-                    fit: BoxFit.fill,
-                    width: double.infinity,
-                    // height: 140,
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withOpacity(0.7),
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+            ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(28),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      FunctionsUtils.buildCachedImage(
+                        travelBlog.featureImage!,
+                        fit: BoxFit.fill,
+                        width: double.infinity,
+                        // height: 140,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withOpacity(0.7),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                          ),
+                          child: Text(
+                            travelBlog.blogHeading ?? "",
+                            style: const TextStyle(
+                              color: MyColors.black,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
-                      child: Text(
-                        travelBlog.blogHeading ?? "",
-                        style: const TextStyle(
-                          color: MyColors.black,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

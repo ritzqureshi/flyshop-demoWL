@@ -51,8 +51,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   dynamic userData;
   @override
   void initState() {
-    fetchContentData();
     super.initState();
+    fetchContentData();
+    userData = SessionManager.getCostumereDataLocally();
   }
 
   Future<void> fetchContentData() async {
@@ -118,7 +119,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    userData = SessionManager.getCostumereDataLocally();
     final size = MediaQuery.of(context).size;
     return Scaffold(
       // backgroundColor: Colors.amber,

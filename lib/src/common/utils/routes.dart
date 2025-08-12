@@ -1,9 +1,11 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ikotech/src/common/widgets/blog_deatils_wid.dart';
 import 'package:ikotech/src/common/widgets/drawer_item_wid.dart';
 
 import '../../../main.dart';
+import '../../data/model/HomeModel/travel_blog_model.dart';
 import '../../data/model/customItemModel/custom_item_model.dart';
 import '../../screens/home_screen_b2b.dart';
 import '../../screens/login_screen.dart';
@@ -31,6 +33,11 @@ class AppRouter {
         path: '/drawerItemPage',
         builder: (context, state) =>
             CmsPageScreen(itemData: state.extra as CustomDrawerItemModel),
+      ),
+      GoRoute(
+        path: '/blogDetailsWid',
+        builder: (context, state) =>
+            BlogDetailsWidget(travelBlog: state.extra as TravelBlogModel),
       ),
     ],
   );

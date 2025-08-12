@@ -31,7 +31,7 @@ class _OffersDealsWidgetState extends State<OffersDealsWidget> {
     }
     selectingOffer = categories[selectedIndex];
     final filteredOffers = widget.offers
-        .where((offer) => offer.category == selectingOffer)
+        .where((offer) => offer.category == selectingOffer&& offer.category != "Popup")
         .toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +97,7 @@ class _OffersDealsWidgetState extends State<OffersDealsWidget> {
             separatorBuilder: (_, __) => const SizedBox(width: 10),
             itemBuilder: (context, index) {
               final selected = selectedIndex == index;
-              return GestureDetector(
+              return categories[index]!="Popup"? GestureDetector(
                 onTap: () {
                   setState(() {
                     selectedIndex = index;
@@ -119,7 +119,7 @@ class _OffersDealsWidgetState extends State<OffersDealsWidget> {
                     ),
                   ),
                 ),
-              );
+              ):SizedBox.shrink();
             },
           ),
         ),
