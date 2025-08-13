@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:ikotech/src/common/utils/functions.dart';
 import 'package:ikotech/src/data/model/HomeModel/coupon_offer_model.dart';
 
 import '../utils/colours.dart';

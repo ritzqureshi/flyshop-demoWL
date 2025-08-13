@@ -86,8 +86,8 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                 itemBuilder: (context, index) {
                   DateTime firstDayOfMonth = DateTime(
                       DateTime.now().year, DateTime.now().month + index, 1);
-                  DateTime lastDayOfMonth = DateTime(
-                      firstDayOfMonth.year, firstDayOfMonth.month + 1, 0);
+                  // DateTime lastDayOfMonth = DateTime(
+                  //     firstDayOfMonth.year, firstDayOfMonth.month + 1, 0);
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

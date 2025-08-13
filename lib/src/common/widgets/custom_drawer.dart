@@ -159,7 +159,7 @@ class _CustomSideDrawerState extends State<CustomSideDrawer> {
               "/drawerItemPage",
               extra: item,
             );
-            getLog(item.toJson(), "item");
+            // getLog(item.toJson(), "item");
           },
         ),
         const Divider(height: 1),

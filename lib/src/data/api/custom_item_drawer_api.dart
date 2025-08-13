@@ -25,7 +25,7 @@ class CustomItemDrawerApi {
 
   static Future<CmsPageModel?> getPageContent(String pageId) async {
     try {
-      getLog("${Constant.customItemDrawerApi}$pageId", "urlToyse");
+      // getLog("${Constant.customItemDrawerPageContentApi}$pageId", "urlToyse");
       final dioCommon = DioCommon();
       dioCommon.setUrl = "${Constant.customItemDrawerPageContentApi}$pageId";
       dioCommon.setMethod = "GET";

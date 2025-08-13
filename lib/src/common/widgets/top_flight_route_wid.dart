@@ -1,8 +1,13 @@
+
 import 'package:flutter/material.dart';
+import 'package:ikotech/src/common/utils/functions.dart';
+import 'package:ikotech/src/common/widgets/webview_wid.dart';
 import 'package:ikotech/src/data/model/HomeModel/top_flight_route_model.dart';
+import 'package:intl/intl.dart';
 
 import '../../screens/see_all_screen.dart';
 import '../utils/colours.dart';
+import '../utils/constant.dart';
 
 class TopFlightRouteWid extends StatelessWidget {
   final List<TopFlightRouteModel> destination;
@@ -42,7 +47,7 @@ class TopFlightRouteWid extends StatelessWidget {
                   );
                 },
                 child: Row(
-                  children:  [
+                  children: [
                     Container(
                       margin: EdgeInsets.all(6),
                       child: Text(
@@ -176,7 +181,18 @@ class FlightDealCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  String urlToUse =
+                      "${Constant.baseUrl}flight-search-page?platform=mobile&tripType=one-way&fromcitydesti=${deal.departairport}-${deal.departsector}&fromContry=${deal.departcountry}&tocitydesti=${deal.arriveairport}-${deal.arrivalsector}&toContry=${deal.arrivecountry}&journeyDateOne=${DateFormat("dd-MM-yyyy").format(DateTime.now().add(Duration(days: 15)))}&ADT=1&CHD=0&INF=0&travel_class=ECONOMY&pft=AC";
+                  getLog(urlToUse, "dealtopflight");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          MyWebviewWidget(title: "", urlToUse: urlToUse), //
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,
                   padding: const EdgeInsets.symmetric(

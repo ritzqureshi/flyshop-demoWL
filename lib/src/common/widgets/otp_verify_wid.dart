@@ -38,7 +38,7 @@ class _OtpVerifyWidState extends State<OtpVerifyWid> {
   @override
   Widget build(BuildContext context) {
     final loginState = Provider.of<LoginState>(context);
-    final mediaQuery = MediaQuery.of(context);
+    // final mediaQuery = MediaQuery.of(context);
     getLog(widget.request, "request");
 
     return SafeArea(

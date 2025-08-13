@@ -65,7 +65,7 @@ class LoginBottomSheetState extends State<LoginBottomSheet> {
             MyButton(
               onClick: () async {
                 String userName = _usernameController.text;
-                String password = _passwordController.text;
+                // String password = _passwordController.text;
                 String mobileNo = mobileController.text;
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
@@ -229,17 +229,17 @@ class LoginBottomSheetState extends State<LoginBottomSheet> {
   }
 
   //------validate old passowrd-----//
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your registered email';
-    } else if (!RegExp(
-      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-    ).hasMatch(value)) {
-      return "Enter a valid email address";
-    }
+  // String? _validateEmail(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Please enter your registered email';
+  //   } else if (!RegExp(
+  //     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+  //   ).hasMatch(value)) {
+  //     return "Enter a valid email address";
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 
   //------validate old passowrd-----//
   String? _validatePassword(String? value) {

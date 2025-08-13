@@ -1,6 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:ikotech/src/common/utils/constant.dart';
+import 'package:ikotech/src/common/widgets/webview_wid.dart';
 import 'package:ikotech/src/data/model/HomeModel/popular_destination_model.dart';
 
 import '../../screens/see_all_screen.dart';
@@ -46,7 +46,7 @@ class PopularDestinationWid extends StatelessWidget {
                   );
                 },
                 child: Row(
-                  children:  [
+                  children: [
                     Container(
                       margin: EdgeInsets.all(6),
                       child: Text(
@@ -97,79 +97,84 @@ class DestinationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // getLog(jsonEncode(destination.toJson()), "destinations");
-    return Container(
-      width: 250,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        color: Colors.white,
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image + Icon
-          Stack(
-            children: [
-              SizedBox(
-                height: 130,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(18),
-                    bottom: Radius.circular(18),
-                  ),
-                  child: FunctionsUtils.buildCachedImage(
-                    destination.image ?? "",
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: 140,
+    return GestureDetector(
+      onTap: () {
+        final safeUrl = Uri.encodeFull("${Constant.baseUrl}mob/package-view/${destination.id}");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                MyWebviewWidget(title: "", urlToUse: safeUrl), //
+          ),
+        );
+        // handle tap
+      },
+      child: Container(
+        width: 300,
+        height: 200,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            // Background Image
+            Positioned.fill(
+              child: FunctionsUtils.buildCachedImage(
+                destination.image ?? "",
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            // Dark gradient overlay
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withOpacity(0.3),
+                      Colors.black.withOpacity(0.1),
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
                   ),
                 ),
               ),
-            ],
-          ),
-          // Content
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      destination.city ?? "",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: MyColors.black,
-
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Container(
-                      width: 120,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.amber,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "BOOK NOW",
-                          style: TextStyle(
-                            color: MyColors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
             ),
-          ),
-        ],
+
+            // Text content at bottom
+            Positioned(
+              left: 16,
+              bottom: 16,
+              right: 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    destination.location ?? "",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    destination.packageType ?? "",
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Starting at ${destination.perAdultPrice}",
+                    style: TextStyle(
+                      color: MyColors.primaryColorOfApp,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

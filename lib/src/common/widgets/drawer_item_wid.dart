@@ -23,9 +23,11 @@ class _CmsPageScreenState extends State<CmsPageScreen> {
   }
 
   Future<void> _loadPage() async {
+    // getLog(widget.itemData.id, "widget.itemData.id");
     final data = await CustomItemDrawerApi.getPageContent(
       widget.itemData.id ?? "",
     );
+
     setState(() {
       _cmsPage = data;
       _isLoading = false;
@@ -41,7 +43,9 @@ class _CmsPageScreenState extends State<CmsPageScreen> {
           : _cmsPage == null
           ? Center(child: Text("No content found."))
           : SingleChildScrollView(
-              child: Html(data: _cmsPage!.pageContents ?? ""),
+              child: _cmsPage!.pageContents!.isNotEmpty
+                  ? Html(data: _cmsPage!.pageContents ?? "")
+                  : Center(child: Text(_cmsPage?.pageDescription ?? "")),
             ),
     );
   }
