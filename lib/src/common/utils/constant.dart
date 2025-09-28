@@ -5,7 +5,7 @@ abstract class Constant {
   static const apiBaseUrl = 'https://techapi.ikotech.xyz/api/';
   static const wlID = "67d28082e5ab33c30c0fa412";
   static const xPassKey =
-      'SDFDS32SDF897WETGFDS65783243ERWE32432HFGHFG5FDFD213213KJKJKJ988DFEWEW ';
+      'SDFDS32SDF897WETGFDS65783243ERWE32432HFGHFG5FDFD213213KJKJKJ988DFEWEW';
   static var companyName = 'Demo WL';
   static var companyLogo = 'assets/images/applogo.png';
   static var companyHomeBanner = 'assets/images/homeScreen.png';
